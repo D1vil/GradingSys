@@ -162,7 +162,7 @@ bool Install() {	//安装文件系统 ok
 bool mkdir(int PIAddr, char name[]) {	//目录创建函数(父目录权限:写)(ok
 	//理论上Cur_Dir_Addr是系统分配的，应该是正确的
 	if (strlen(name) > FILE_NAME_MAX_SIZE) {
-		printf("The file name exceeds the maximum length\n");
+		printf("文件名称超过最大长度\n");
 		return false;
 	}
 	//查找父目录的空位置
@@ -182,7 +182,7 @@ bool mkdir(int PIAddr, char name[]) {	//目录创建函数(父目录权限:写)(
 		role = 6;
 	}
 	if ((((parino.inode_mode >> role >> 1) & 1 == 0) )&& (strcmp(Cur_User_Name, "root") != 0)) {
-		printf("Permission denied, unable to create directory\n");
+		printf("权限不足，无法新建目录\n");
 		return false;
 	}
 
@@ -202,7 +202,7 @@ bool mkdir(int PIAddr, char name[]) {	//目录创建函数(父目录权限:写)(
 					fseek(fr, ditem[j].inodeAddr, SEEK_SET);
 					fread(&temp, sizeof(inode), 1, fr);
 					if (((temp.inode_mode >> 9) & 1) == 1) {//是目录
-						printf("This directory already contains a directory with the same name\n");
+						printf("该目录下已包含同名目录\n");
 						return false;
 					}
 				}
@@ -219,7 +219,7 @@ bool mkdir(int PIAddr, char name[]) {	//目录创建函数(父目录权限:写)(
 			}
 		}
 		if (empty_b == -1) {
-			printf("The directory is full ");
+			printf("该目录已满，无法添加更多文件");
 			return false;
 		}
 		int baddr = balloc();
@@ -302,7 +302,7 @@ bool mkdir(int PIAddr, char name[]) {	//目录创建函数(父目录权限:写)(
 bool mkfile(int PIAddr, char name[],char buf[]) {	//文件创建函数
 	//理论上Cur_Dir_Addr是系统分配的，应该是正确的
 	if (strlen(name) > FILE_NAME_MAX_SIZE) {
-		printf("The file name exceeds the maximum length\n");
+		printf("文件名称超过最大长度\n");
 		return false;
 	}
 
@@ -323,7 +323,7 @@ bool mkfile(int PIAddr, char name[],char buf[]) {	//文件创建函数
 		role = 6;
 	}
 	if ((((parino.inode_mode >> role >> 1) & 1 == 0)) && (strcmp(Cur_User_Name, "root") != 0)) {
-		printf("Permission denied, unable to create directory\n");
+		printf("权限不足，无法新建目录\n");
 		return false;
 	}
 	
@@ -343,7 +343,7 @@ bool mkfile(int PIAddr, char name[],char buf[]) {	//文件创建函数
 					fseek(fr, ditem[j].inodeAddr, SEEK_SET);
 					fread(&temp, sizeof(inode), 1, fr);
 					if (((temp.inode_mode >> 9) & 1) == 1) {//是目录
-						printf("This directory already contains a directory with the same name\n");
+						printf("该目录下已包含同名目录\n");
 						return false;
 					}
 				}
@@ -359,7 +359,7 @@ bool mkfile(int PIAddr, char name[],char buf[]) {	//文件创建函数
 			}
 		}
 		if (empty_b == -1) {
-			printf("The directory is full");
+			printf("该目录已满，无法添加更多文件");
 			return false;
 		}
 		int baddr = balloc();
@@ -468,11 +468,11 @@ bool writefile(inode fileinode, int iaddr, char buf[]) { //文件写入
 }
 bool rmdir(int CHIAddr, char name[]) {//删除当前目录
 	if (strlen(name) > FILE_NAME_MAX_SIZE) {
-		printf("The file name exceeds the maximum length\n");
+		printf("文件名称超过最大长度\n");
 		return false;
 	}
 	if ((strcmp(name, ".") == 0) || strcmp(name, "..") == 0 ){
-		printf("The file cannot be deleted\n");
+		printf("文件无法删除\n");
 		return false;
 	}
 
@@ -489,7 +489,7 @@ bool rmdir(int CHIAddr, char name[]) {//删除当前目录
 		mode = 6;
 	}
 	if ((((ino.inode_mode >> mode >> 1) & 1) == 0) && (strcmp(Cur_User_Name, "root") != 0)) {//是否可写：2
-		printf("Permission denied\n");
+		printf("没有权限删除该文件夹\n");
 		return false;
 	}
 
@@ -532,7 +532,7 @@ bool rmdir(int CHIAddr, char name[]) {//删除当前目录
 }
 bool rmfile(int CHIAddr, char name[]) {	//删除当前文件
 	if (strlen(name) > FILE_NAME_MAX_SIZE) {
-		printf("The file name exceeds the maximum length\n");
+		printf("文件名称超过最大长度\n");
 		return false;
 	}
 
@@ -549,7 +549,7 @@ bool rmfile(int CHIAddr, char name[]) {	//删除当前文件
 		mode = 6;
 	}
 	if ((((ino.inode_mode >> mode >> 1) & 1) == 0) && (strcmp(Cur_User_Name, "root") != 0)) {//是否可写：2
-		printf("Permission denied\n");
+		printf("没有权限删除该文件\n");
 		return false;
 	}
 
@@ -569,7 +569,7 @@ bool rmfile(int CHIAddr, char name[]) {	//删除当前文件
 bool addfile(inode fileinode, int iaddr, char buf[]) { //文件续写ok
 	//前提：假设是按照block顺序存储
 	if ((fileinode.inode_file_size + strlen(buf)) > 10 * BLOCK_SIZE) {
-		printf("The file is out of memory\n");
+		printf("文件内存不足，无法继续添加内容\n");
 		return false;
 	}
 
@@ -671,7 +671,7 @@ bool cd(int PIAddr, char name[]) {//切换目录(ok
 			}
 		}
 	}
-	printf("The folder does not exist\n");
+	printf("该文件夹不存在，无法进入\n");
 	return false;
 }
 void gotoRoot() { //ok
@@ -694,7 +694,7 @@ void ls(char str[]) {//显示当前目录所有文件 ok
 		mode = 6;
 	}
 	if ((((ino.inode_mode >> mode >> 2) & 1 )== 0) &&(strcmp(Cur_User_Name, "root") != 0)) {//是否可读：4
-		printf("Permission denied\n");
+		printf("没有权限查看该文件夹\n");
 		return;
 	}
 	
@@ -778,7 +778,7 @@ int ialloc() { //分配inode，满了返回-1 ok
 		}
 	}
 	if (iaddr == -1) {
-		printf("Lack of i-node space\n");
+		printf("没有inode空间\n");
 		return -1;
 	}
 	iaddr =Inode_Start_Addr + iaddr * INODE_SIZE;
@@ -791,12 +791,12 @@ int ialloc() { //分配inode，满了返回-1 ok
 }
 void ifree(int iaddr) {
 	if ((iaddr % INODE_SIZE) != 0) {
-		printf("Current i-node position error\n");
+		printf("当前inode位置错误\n");
 		return;
 	}
 	int index = (iaddr - Inode_Start_Addr) / INODE_SIZE;
 	if (inode_bitmap[index] == 0) {
-		printf("Not using the current i-node, no need to release it\n");
+		printf("未使用当前inode，无需释放\n");
 		return;
 	}
 	inode_bitmap[index] = 0;
@@ -820,7 +820,7 @@ int balloc() { //分配block，满了返回-1 ok
 		}
 	}
 	if (index == -1) {
-		printf("Lack of block space\n");
+		printf("没有block空间\n");
 		return -1;
 	}
 	baddr = Block_Start_Addr + index * BLOCK_SIZE;
@@ -833,12 +833,12 @@ int balloc() { //分配block，满了返回-1 ok
 }
 void bfree(int baddr) {
 	if ((baddr % BLOCK_SIZE) != 0) {
-		printf("Current block position error\n");
+		printf("当前block位置错误\n");
 		return;
 	}
 	int index = (baddr - Block_Start_Addr) / BLOCK_SIZE;
 	if (block_bitmap[index] == 0) {
-		printf("Not using the current block, no need to release it\n");
+		printf("未使用当前block，无需释放\n");
 		return;
 	}
 	block_bitmap[index] = 0;
@@ -898,7 +898,7 @@ bool logout() {	//用户注销
 bool useradd(char username[], char passwd[], char group[]) {	//用户注册
 	//权限判断
 	if (strcmp(Cur_User_Name, "root") != 0) {
-		printf("Permission denied!\n");
+		printf("权限不足，无法添加用户！\n");
 		return false;
 	}
 	//保护现场并更改信息
@@ -963,7 +963,7 @@ bool useradd(char username[], char passwd[], char group[]) {	//用户注册
 		g = 2;
 	}
 	else {
-		printf("The user group is incorrect, please re-enter");
+		printf("用户组别不正确，请重新输入");
 		return false;
 	}
 
@@ -979,7 +979,7 @@ bool useradd(char username[], char passwd[], char group[]) {	//用户注册
 	}
 	//buf[strlen(buf)] = '\0'; (strcat可能会自动添加？）
 	if (strstr(buf, username)!= NULL) {
-		printf("The username already exists\n");
+		printf("该用户名已存在\n");
 		return false;
 	}
 	sprintf(buf + strlen(buf), "%s:%d:%d\n", username, nextUID++, g);
@@ -1070,11 +1070,11 @@ bool useradd(char username[], char passwd[], char group[]) {	//用户注册
 }
 bool userdel(char username[]) {	//用户删除
 	if (strcmp(Cur_User_Name, "root") != 0) {
-		printf("Permission denied\n");
+		printf("权限不足，无法删除用户\n");
 		return false;
 	}
 	if (strcmp(username, "root") == 0) {
-		printf("Unable to delete administrator\n");
+		printf("无法删除管理员\n");
 		return false;
 	}
 	//保护现场并更改信息
@@ -1137,7 +1137,7 @@ bool userdel(char username[]) {	//用户删除
 	//buf[strlen(buf)] = '\0'; (strcat可能会自动添加？）
 	char* p = strstr(buf, username);
 	if (strstr(buf, username) == NULL) {
-		printf("The username does not exist\n");
+		printf("该用户名不存在，无法删除\n");
 		return false;
 	}
 	*p = '\0';
@@ -1263,7 +1263,7 @@ bool check(char username[], char passwd[]) {//核验身份登录&设置 ok
 	}
 	char* p = strstr(buf, username);
 	if (p == NULL) {
-		printf("The user does not exist. Please sign up and log in again.\n");
+		printf("该用户不存在。请创建用户后重新登陆.\n");
 		return false;
 	}
 	while ((*p) != ':') {
@@ -1276,7 +1276,7 @@ bool check(char username[], char passwd[]) {//核验身份登录&设置 ok
 		p++;
 	}
 	if (strcmp(checkpw, passwd) != 0) {
-		printf("Wrong password!\n");
+		printf("密码不正确，请重新尝试！\n");
 		return false;
 	}
 
@@ -1325,11 +1325,11 @@ bool check(char username[], char passwd[]) {//核验身份登录&设置 ok
 }
 bool chmod(int PIAddr, char name[], int pmode,int type) {//修改文件or目录权限（假定文件和目录也不能重名）
 	if (strlen(name) > FILENAME_MAX) {
-		printf("The file name exceeds the maximum length\n");
+		printf("文件名称超过最大长度\n");
 		return false;
 	}
 	if (strcmp(name, ".") ==0|| strcmp(name, "..")==0) {
-		printf("The file cannot modify permissions\n");
+		printf("该文件无法修改权限\n");
 		return false;
 	}
 	inode ino;
@@ -1361,7 +1361,7 @@ bool chmod(int PIAddr, char name[], int pmode,int type) {//修改文件or目录�
 			}
 		}
 	}
-	printf("The file was not found\n");
+	printf("没有找到该文件，无法修改权限\n");
 	return false;
 }
 void cmd(char cmd[],int count) {
@@ -1388,7 +1388,7 @@ void cmd(char cmd[],int count) {
 		sscanf(cmd, "%s%s", com1, com2);
 		char temp[100];
 		memset(temp, '\0', strlen(temp));
-		printf("Enter the content you need：\n");
+		printf("输入你需要的内容：\n");
 		gets(temp);
 		mkfile(Cur_Dir_Addr, com2, temp);
 	}
@@ -1419,12 +1419,12 @@ void cmd(char cmd[],int count) {
 	}
 	else if (strcmp(com1, "format") == 0) {
 		if (strcmp(Cur_User_Name, "root") != 0) {
-			cout << "Permission denied" << endl;
+			cout << "您的权限不足" << endl;
 		}
 		logout();
 	}
 	else if (strcmp(com1, "exit") == 0) {
-		cout << "Exit the score management system successfully!" << endl;
+		cout << "退出成绩管理系统，拜拜！" << endl;
 		exit(0);
 	}
 

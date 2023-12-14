@@ -75,12 +75,21 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <ItemGroup>
+    <ClCompile Include="function.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="os.cpp" />
+    <ClCompile Include="role.cpp" />
+    <ClCompile Include="snapshot.cpp" />
+    <ClCompile Include="student.cpp" />
+    <ClCompile Include="teacher.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="function.h" />
     <ClInclude Include="os.h" />
+    <ClInclude Include="role.h" />
     <ClInclude Include="snapshot.h" />
+    <ClInclude Include="student.h" />
+    <ClInclude Include="teacher.h" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

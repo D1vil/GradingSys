@@ -41,16 +41,16 @@ using namespace std;
 
 int main()
 {
-    printf("%s Welcome!\n", "GradingSys");
+    printf("%s 向你问好!\n", "GradingSys");
     //###############打不开文件################
     if ((fr = fopen(GRADE_SYS_NAME, "rb")) == NULL) {
         fw = fopen(GRADE_SYS_NAME, "wb");
         if (fw == NULL) {
-            printf("Virtual disk file opening failed！");
+            printf("虚拟磁盘文件打开失败！");
             return 0;
         }
         fr = fopen(GRADE_SYS_NAME, "rb");
-        printf("Virtual disk file successfully opened！\n");
+        printf("虚拟磁盘文件打开成功！\n");
 
         //初始化变量
         nextUID = 0;
@@ -69,18 +69,18 @@ int main()
         Root_Dir_Addr = Inode_Start_Addr;
         Cur_Dir_Addr = Root_Dir_Addr;
         strcpy(Cur_Dir_Name, "/");
-        printf("The file system is being formatted\n");
+        printf("文件系统正在格式化\n");
 
         //系统格式化
         if (!Format()) {
-            printf("Format failed\n");
+            printf("格式化失败\n");
             return 0;
         }
-        printf("Format complete\n\n");
+        printf("格式化完成\n\n");
 
         //Install
         if (!Install()) {
-            printf("File system installation failed！\n");
+            printf("文件系统安装失败！\n");
             return 0;
         }
     }
@@ -88,7 +88,7 @@ int main()
         fw = fopen(GRADE_SYS_NAME, "rb+"); //在原来的基础上修改文件
 
         if (fw == NULL) {
-            printf("Disk file open failed！/n");
+            printf("磁盘文件打开失败！/n");
             return false;
         }
 
@@ -112,22 +112,22 @@ int main()
         strcpy(Cur_Dir_Name, "/");
 
         //是否需要格式化
-        printf("Do you need to format it：[y/n]\n");
+        printf("是否需要格式化：[y/n]\n");
         char a = getchar();
         if (a == 'y') {
             if (!Format()) {
-                printf("Format failed！\n");
+                printf("格式化失败！\n");
                 return 0;
             }
-            printf("Format complete！\n");
+            printf("格式化完成！\n");
         }
 
         //Install
         if (!Install()) {
-            printf("File system installation failed！\n");
+            printf("文件系统安装失败！\n");
             return 0;
         }
-        printf("File system installation successful！\n");
+        printf("安装文件系统成功！\n");
     }
     int count = 0;  //记录操作次数
     while (1) {
@@ -151,12 +151,12 @@ int main()
             cmd(str,0);
         }
         else {
-            printf("Welcome to GradingSysOS，please log in first\n");
+            printf("欢迎来到GradingSysOS，请先登录\n");
             while (!login());	//登陆
-            printf("Login successful！\n");
+            printf("登陆成功！\n");
         }
     }
-    cout << "Login successful" << endl;
+    cout << "登陆成功" << endl;
     help();
     //system("pause");
     system("cls");
